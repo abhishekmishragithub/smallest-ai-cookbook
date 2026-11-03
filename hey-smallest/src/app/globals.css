@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-canvas: #f3f1ec;
+  --color-ink: #1a1916;
+  --color-accent: #0e6b5c;
+  --color-line: color-mix(in srgb, #1a1916 16%, transparent);
+  --font-sans: var(--font-geist), "Aeonik Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+body {
+  --accent: #0e6b5c;
+  --grayscale: #1a1916;
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
