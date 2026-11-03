@@ -15,13 +15,16 @@ export const narrateRequestSchema = z.object({
 
 export const cueKindSchema = z.enum(["diagram", "highlight", "arrow"]);
 
+/** Lowercase, and turn anything outside a-z, 0-9, and hyphen into a hyphen. */
+export function normalizeCueId(value: string): string {
+  return value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-");
+}
+
 export const cueSchema = z.object({
   id: z
     .string()
-    .trim()
-    .min(1)
-    .max(64)
-    .regex(/^[a-z0-9-]+$/),
+    .transform(normalizeCueId)
+    .pipe(z.string().min(1).max(64).regex(/^[a-z0-9-]+$/)),
   atWord: z.number().int().nonnegative(),
   kind: cueKindSchema,
   svg: z.string().max(30000).optional(),

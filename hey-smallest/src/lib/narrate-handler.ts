@@ -23,6 +23,7 @@ const SYSTEM = [
   "Reply with one JSON object only: {\"narration\": string, \"cues\": array}.",
   "narration is plain spoken English. Do not use an em dash.",
   "cues items are {id, atWord, kind, svg?, target?, label?}.",
+  "id is kebab-case: lowercase letters, digits, and hyphens only, like refund-policy.",
   "atWord is a 0-based index into narration split on whitespace.",
   "kind is diagram, highlight, or arrow.",
   "svg, when present, is a small standalone svg using only shapes and text.",

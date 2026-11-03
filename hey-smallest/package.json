@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "verify-live": "tsx scripts/verify-live.ts"
+    "verify-live": "tsx scripts/verify-live.mts"
   },
   "dependencies": {
     "framer-motion": "^12.23.24",

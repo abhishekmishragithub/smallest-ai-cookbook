@@ -127,6 +127,49 @@ describe("POST /api/narrate", () => {
     expect(body.cues[1]?.target).toBe("main h1");
   });
 
+  it("keeps an Electron answer whose cue id uses underscores", async () => {
+    const fetchImpl = vi.fn(async () => {
+      return new Response(
+        JSON.stringify({
+          choices: [
+            {
+              message: {
+                content: JSON.stringify({
+                  narration: "Refunds are described on the billing page.",
+                  cues: [{ id: "refund_policy", atWord: 0, kind: "highlight", label: "Refunds" }],
+                }),
+              },
+            },
+          ],
+        }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      );
+    });
+
+    const response = await handleNarrate(
+      new Request("https://hey.example/api/narrate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          question: "What is the weather in Lisbon tomorrow morning?",
+          page,
+        }),
+      }),
+      {
+        env: { SMALLEST_API_KEY: "test-key" },
+        fetchImpl: fetchImpl as typeof fetch,
+        limiter: createRateLimiter({ limit: 5, windowMs: 60_000 }),
+      },
+    );
+
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as { narration: string; cues: { id: string }[] };
+    expect(body.narration).toMatch(/Refunds are described/);
+    expect(body.cues.map((cue) => cue.id)).toEqual(["refund-policy"]);
+    const sent = JSON.parse(String((fetchImpl.mock.calls[0][1] as RequestInit).body));
+    expect(sent.messages[0].content).toMatch(/kebab-case/);
+  });
+
   it("drops cues whose atWord is outside the spoken words", () => {
     const clean = sanitizeNarration({
       narration: "Two words",

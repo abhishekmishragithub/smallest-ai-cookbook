@@ -1,9 +1,14 @@
 /**
- * Live check for Lightning word timestamps and a Pulse socket handshake.
- * Run with a real key: SMALLEST_API_KEY=... npm run verify-live
+ * Live check for Lightning word timestamps, a Pulse socket handshake,
+ * and, when a base URL is given, POST /api/narrate.
+ *
+ * SMALLEST_API_KEY=... npm run verify-live
+ * SMALLEST_API_KEY=... npm run verify-live -- http://127.0.0.1:3000
+ *
  * This script does not print the key or the full token.
  */
 import WebSocket from "ws";
+import { narrateResponseSchema } from "../src/lib/schemas";
 
 const key = process.env.SMALLEST_API_KEY;
 if (!key) {
@@ -11,6 +16,7 @@ if (!key) {
   process.exit(1);
 }
 
+const baseUrl = narrateBaseUrl();
 const text = "Lightning can mark each spoken word.";
 const ttl = 120;
 
@@ -44,7 +50,9 @@ const tts = await new Promise<{ words: number; firstAudioMs: number | null }>((r
   const started = Date.now();
   let words = 0;
   let firstAudioMs: number | null = null;
-  const socket = new WebSocket(`wss://api.smallest.ai/waves/v1/tts/live?api_key=${encodeURIComponent(tokenBody.access_token!)}`);
+  const socket = new WebSocket(
+    `wss://api.smallest.ai/waves/v1/tts/live?api_key=${encodeURIComponent(tokenBody.access_token!)}`,
+  );
   const timer = setTimeout(() => {
     socket.close();
     reject(new Error("Timed out waiting for a word_timestamp frame."));
@@ -131,4 +139,38 @@ await new Promise<void>((resolve, reject) => {
   });
 });
 
+if (baseUrl) {
+  await checkNarrate(baseUrl);
+}
+
 console.log(`Live check passed. Word timestamps: ${tts.words}.`);
+
+function narrateBaseUrl(): string | undefined {
+  const fromEnv = process.env.VERIFY_BASE_URL?.trim();
+  if (fromEnv) return fromEnv;
+  return process.argv.find((value) => /^https?:\/\//.test(value));
+}
+
+async function checkNarrate(base: string): Promise<void> {
+  const endpoint = new URL("/api/narrate", base.endsWith("/") ? base : `${base}/`);
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      question: "How do I stream TTS with Lightning?",
+      page: {
+        url: "https://docs.smallest.ai",
+        title: "Smallest AI Documentation",
+        text: "Live verification of Hey Smallest.",
+      },
+    }),
+  });
+  const body: unknown = await response.json().catch(() => null);
+  const parsed = narrateResponseSchema.safeParse(body);
+  if (!response.ok || !parsed.success || parsed.data.cues.length < 1 || !parsed.data.narration.trim()) {
+    const detail = parsed.success ? `HTTP ${response.status}` : parsed.error.message;
+    console.error(`Narrate check failed for ${endpoint.href}. ${detail}`);
+    process.exit(1);
+  }
+  console.log(`Narrate ok at ${endpoint.href}. ${parsed.data.cues.length} cues.`);
+}

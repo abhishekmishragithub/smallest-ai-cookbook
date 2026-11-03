@@ -39,11 +39,14 @@ npm run test:e2e  # browser test that cues fire in order
 npm run verify-live
 ```
 
-`verify-live` is for a machine that has a real key. It mints a token (TTL 120 seconds), opens the Lightning WebSocket with `word_timestamps: true` on `meher` / `lightning_v3.1_pro`, prints the first word frames, and checks that a Pulse streaming socket accepts `model=pulse`.
+`verify-live` is for a machine that has a real key. It mints a token (TTL 120 seconds), opens the Lightning WebSocket with `word_timestamps: true` on `meher` / `lightning_v3.1_pro`, prints the first word frames, and checks that a Pulse streaming socket accepts `model=pulse`. Pass a base URL to also POST `/api/narrate` and require a narration plus at least one cue.
 
 ```bash
 SMALLEST_API_KEY=... npm run verify-live
+SMALLEST_API_KEY=... npm run verify-live -- http://127.0.0.1:3000
 ```
+
+`VERIFY_BASE_URL` is the same option when you do not want a positional argument.
 
 ## Vercel
 
