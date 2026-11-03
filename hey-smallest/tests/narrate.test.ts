@@ -47,6 +47,7 @@ describe("POST /api/narrate", () => {
     const body = (await response.json()) as { narration: string; cues: { id: string; atWord: number; svg?: string }[] };
     const words = splitWords(body.narration);
     expect(body.cues.length).toBeGreaterThan(1);
+    expect(body).toMatchObject({ mockId: "lightning" });
     let previous = -1;
     for (const cue of body.cues) {
       expect(cue.atWord).toBeGreaterThan(previous);

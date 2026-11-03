@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { QUESTIONS } from "@/lib/catalog";
+import { DEFAULT_MS_PER_CHAR } from "@/lib/cue-scheduler";
 import { EMPTY_STAGE_SVG } from "@/lib/diagram";
 import { HEY_SMALLEST_DEFAULTS, type Cue, type PageContext } from "@/lib/schemas";
 import { initialState, transition } from "@/lib/state-machine";
@@ -50,7 +51,7 @@ export function HeySmallest({
   const abortRef = useRef<AbortController | null>(null);
   const runRef = useRef(0);
   const pageRef = useRef<PageContext | null>(pageContext ?? null);
-  const msPerChar = Number(process.env.NEXT_PUBLIC_MOCK_MS_PER_CHAR || "22") || 22;
+  const msPerChar = Number(process.env.NEXT_PUBLIC_MOCK_MS_PER_CHAR || String(DEFAULT_MS_PER_CHAR)) || DEFAULT_MS_PER_CHAR;
 
   useEffect(() => {
     pageRef.current = pageContext ?? scrapePage();
@@ -102,6 +103,7 @@ export function HeySmallest({
           context,
           signal: controller.signal,
           msPerChar,
+          mockId: narration.mockId,
           onTick: (tick) => {
             if (runRef.current !== run) return;
             if (tick.caption) {

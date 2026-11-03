@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createCueScheduler } from "@/lib/cue-scheduler";
+import { createCueScheduler, DEFAULT_MS_PER_CHAR } from "@/lib/cue-scheduler";
+import { audioClockElapsed, isPlaybackFinished, wallLimitSec } from "@/lib/playback-clock";
 import type { Cue } from "@/lib/schemas";
 import {
   estimateCueTimeSec,
@@ -74,6 +75,67 @@ describe("CueScheduler", () => {
     const done = scheduler.complete(0.1);
     expect(done.cues.map((item) => item.cue.id)).toEqual(["say", "lightning", "rest"]);
     expect(done.strategy).toBe("character-estimate");
+  });
+
+  it("lets a real word timestamp override the estimate after the fallback", () => {
+    const scheduler = createCueScheduler({ narration, cues, msPerChar: 100, graceSec: 0.5 });
+    const early = scheduler.advance(0.5);
+    expect(early.strategy).toBe("character-estimate");
+    expect(early.cues.map((item) => item.cue.id)).toEqual(["say", "lightning"]);
+    scheduler.pushTimestamp({ id: 0, word: "REST.", start: 5, end: 5.4 });
+    expect(scheduler.strategy).toBe("word-timestamps");
+    expect(scheduler.advance(2).cues).toEqual([]);
+    expect(scheduler.advance(5).cues.map((item) => [item.cue.id, item.atSec, item.strategy])).toEqual([
+      ["rest", 5, "word-timestamps"],
+    ]);
+  });
+
+  it("uses 65 ms per character unless a pace is passed in", () => {
+    expect(DEFAULT_MS_PER_CHAR).toBe(65);
+    const scheduler = createCueScheduler({ narration, cues, graceSec: 0 });
+    const estimated = scheduler.advance(estimateCueTimeSec(words, 1, 65));
+    expect(estimated.cues.map((item) => item.cue.id)).toEqual(["say", "lightning"]);
+    expect(scheduler.advance(estimateCueTimeSec(words, 3, 65) - 0.01).cues).toEqual([]);
+  });
+
+  it("holds the audio clock at 0 until a buffer is scheduled", () => {
+    expect(audioClockElapsed({ durationScheduled: 0, audioElapsed: 1.3, elapsedSeen: 0 })).toBe(0);
+    expect(audioClockElapsed({ durationScheduled: 2, audioElapsed: 0.4, elapsedSeen: 0.2 })).toBe(0.4);
+  });
+
+  it("scales the wall-clock give-up with the narration instead of a fixed 45 seconds", () => {
+    expect(wallLimitSec("Short line.")).toBeLessThan(45);
+    expect(wallLimitSec("a".repeat(2000))).toBeGreaterThan(45);
+    const medium = "word ".repeat(250);
+    const limit = wallLimitSec(medium);
+    expect(limit).toBeGreaterThan(45);
+    expect(
+      isPlaybackFinished({
+        wallElapsed: 44,
+        wallLimitSec: limit,
+        started: false,
+        elapsed: 0,
+        done: () => false,
+      }),
+    ).toBe(false);
+    expect(
+      isPlaybackFinished({
+        wallElapsed: limit + 0.1,
+        wallLimitSec: limit,
+        started: true,
+        elapsed: 1,
+        done: () => false,
+      }),
+    ).toBe(true);
+    expect(
+      isPlaybackFinished({
+        wallElapsed: 1.2,
+        wallLimitSec: limit,
+        started: false,
+        elapsed: 0,
+        done: (value) => value > 1,
+      }),
+    ).toBe(true);
   });
 
   it("does not repeat a cue if a late timestamp follows the estimate", () => {

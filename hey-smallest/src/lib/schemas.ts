@@ -35,6 +35,11 @@ export const cueSchema = z.object({
 export const narrateResponseSchema = z.object({
   narration: z.string().trim().min(1).max(4000),
   cues: z.array(cueSchema).max(16),
+  /** Catalog id of the bundled mock recording, when this answer has one. */
+  mockId: z
+    .string()
+    .regex(/^[a-z0-9-]+$/)
+    .optional(),
 });
 
 export const tokenResponseSchema = z.object({

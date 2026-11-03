@@ -16,7 +16,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-With no `SMALLEST_API_KEY`, `POST /api/token` returns `mode: "mock"`. Narration comes from a grounded catalog. Playback uses synthetic word timestamps and silent audio, so the cues still move in time. The microphone needs a real token, so mock mode asks you to type a question or pick a chip.
+With no `SMALLEST_API_KEY`, `POST /api/token` returns `mode: "mock"`. Narration comes from a grounded catalog. Mock mode plays a bundled Lightning recording of that answer (meher, `lightning_v3.1_pro`) from `public/mock-audio/`, and the cues follow that file's word timestamps on the audio clock. Synthetic timestamps and silence are only used if the recording fails to load. The microphone needs a real token, so mock mode asks you to type a question or pick a chip.
 
 ## Environment
 
@@ -25,7 +25,7 @@ With no `SMALLEST_API_KEY`, `POST /api/token` returns `mode: "mock"`. Narration 
 | `SMALLEST_API_KEY` | Server only. Mints `wat_` tokens and calls Electron. Never sent to the browser. |
 | `SMALLEST_ADMIN_API_KEY` | Not used by these routes. `POST /console/v1/auth/token` rejects admin keys. Listed so a host can add Atoms admin calls later. |
 | `ALLOWED_ORIGINS` | Comma separated browser origins for `/api/token` and `/api/narrate`. Exact origins, or one wildcard label such as `https://*.docs.buildwithfern.com`. A bare `*` is ignored. |
-| `NEXT_PUBLIC_MOCK_MS_PER_CHAR` | Optional mock playback pace. Default `22`. |
+| `NEXT_PUBLIC_MOCK_MS_PER_CHAR` | Character estimate used only when a voice emits no word timestamps, and as the silent fallback. Default `65`, near meher's pace. |
 
 Default allowlist: `https://docs.smallest.ai` and `https://*.docs.buildwithfern.com`. A request whose `Origin` matches the app's own host is allowed too, so the demo page does not need to list itself.
 
@@ -65,11 +65,13 @@ button or Ctrl/Cmd K
 The browser never holds `SMALLEST_API_KEY`.
 
 1. `POST /api/token` mints a token on the server with `POST https://api.smallest.ai/console/v1/auth/token` and `ttl_seconds: 300` (the platform allows 30 to 900; this app stays at or under 300). The response is `{ token, expires_at, mode }`. `token` is the `wat_` access token. Rate limited per IP. Without a key, `mode` is `"mock"` and `token` is null.
-2. `POST /api/narrate` accepts `{ question, page: { url, title, text } }`. `page.text` is capped at 8000 characters. The response is `{ narration, cues }`. Each cue is `{ id, atWord, kind, svg?, target?, label? }`. `atWord` is the 0-based index into `narration.split(/\s+/)`. `kind` is `diagram`, `highlight`, or `arrow`.
+2. `POST /api/narrate` accepts `{ question, page: { url, title, text } }`. `page.text` is capped at 8000 characters. The response is `{ narration, cues, mockId? }`. Each cue is `{ id, atWord, kind, svg?, target?, label? }`. `atWord` is the 0-based index into `narration.split(/\s+/)`. `kind` is `diagram`, `highlight`, or `arrow`. `mockId` is the catalog id (`call-flow`, `lightning`, `pulse`, `phone`, `clone`, `latency`, `integrations`, `auth`, or `unknown`) when a bundled recording exists.
 3. The eight demo questions resolve from a catalog grounded in the public docs (endpoints, fields, and latency figures that the docs publish). Any other question is sent to Electron (`POST /waves/v1/chat/completions`, `model: "electron"`) when a key is set. `wat_` tokens cannot call the LLM, so that call stays on the server.
 4. SVG in a cue is data. The server strips `script`, `foreignObject`, event handler attributes, and hrefs that are not internal fragments. The client sanitizes again before inserting the markup.
 5. Speech to text in the browser uses `model=pulse` (not `pulse-pro`, which is pre-recorded). Audio is 16 kHz PCM sent from a script processor. A blob URL worklet is avoided because the docs CSP is strict.
-6. Text to speech sends `voice_id`, `text`, `model`, `sample_rate: 24000`, and `word_timestamps: true`. Word frames are `{ id, word, start, end }` in seconds. The scheduler treats `id` as the word index when the normalized words match, and it tolerates punctuation (`Lightning,` matches `Lightning`). If the socket emits no word frames, cues fall back to a character count estimate.
+6. Text to speech sends `voice_id`, `text`, `model`, `sample_rate: 24000`, and `word_timestamps: true`. Word frames are `{ id, word, start, end }` in seconds. Cues stay at time 0 until the first audio buffer is scheduled, so the time to first byte does not run the character-count fallback. Frames are matched to narration words by normalized text in order, because some chunk boundaries restart `id` and some tokens are merged. A real word frame overrides the character estimate even if that estimate already started. The estimate itself uses 65 ms per character. The wall-clock give-up scales with the narration length.
+
+Mock recordings live in `public/mock-audio/<mockId>.mp3` and `<mockId>.timestamps.json`. See `public/mock-audio/MAPPING.md`.
 
 UI phases are `idle`, `listening`, `thinking`, `speaking`, `error`, and `interrupted`.
 

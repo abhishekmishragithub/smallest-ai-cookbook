@@ -1,7 +1,7 @@
 import type { Cue } from "./schemas";
 import {
   estimateCueTimeSec,
-  indexForTimestamp,
+  matchTimestamp,
   splitWords,
   wordIndexAtEstimate,
   type WordTimestamp,
@@ -29,7 +29,8 @@ type Queued = {
 };
 
 const DEFAULT_GRACE_SEC = 0.8;
-const DEFAULT_MS_PER_CHAR = 22;
+/** Close to meher on lightning_v3.1_pro, about 68 ms per character. */
+export const DEFAULT_MS_PER_CHAR = 65;
 
 export function createCueScheduler(input: {
   narration: string;
@@ -82,14 +83,17 @@ export function createCueScheduler(input: {
     },
     pushTimestamp(frame: WordTimestamp): void {
       sawTimestamp = true;
-      if (strategy !== "character-estimate") strategy = "word-timestamps";
-      const index = indexForTimestamp(words, frame, usedWords);
-      if (index === null) return;
-      usedWords.add(index);
-      accepted.push({ index, start: frame.start });
-      for (const cue of cues) {
-        if (cue.atWord !== index) continue;
-        queued.push({ cue, atSec: frame.start, wordIndex: index });
+      // A real frame always wins, including after the character estimate has started.
+      strategy = "word-timestamps";
+      const match = matchTimestamp(words, frame, usedWords);
+      if (!match) return;
+      for (let offset = 0; offset < match.span; offset += 1) {
+        const index = match.index + offset;
+        accepted.push({ index, start: frame.start });
+        for (const cue of cues) {
+          if (cue.atWord !== index) continue;
+          queued.push({ cue, atSec: frame.start, wordIndex: index });
+        }
       }
     },
     advance(elapsedSec: number): SchedulerTick {

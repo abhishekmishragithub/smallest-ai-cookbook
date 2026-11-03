@@ -19,7 +19,7 @@ test("mock mode walks call-flow cues in order", async ({ page }) => {
         if (ids.length > seen.length) seen.splice(0, seen.length, ...ids);
         return ids.length;
       },
-      { timeout: 20_000 },
+      { timeout: 30_000 },
     )
     .toBe(7);
   expect(seen[0]).toBe("call-server");

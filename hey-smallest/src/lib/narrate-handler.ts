@@ -76,12 +76,12 @@ export async function resolveNarration(
   deps: Pick<NarrateDeps, "env" | "fetchImpl">,
 ): Promise<NarrateResponse> {
   const known = matchQuestion(question);
-  if (known) return known.answer;
+  if (known) return { ...known.answer, mockId: known.id };
 
-  if (!deps.env.SMALLEST_API_KEY) return unknownAnswer();
+  if (!deps.env.SMALLEST_API_KEY) return { ...unknownAnswer(), mockId: "unknown" };
 
   const generated = await narrateWithElectron(question, page, deps.env.SMALLEST_API_KEY, deps.fetchImpl);
-  return generated ?? unknownAnswer();
+  return generated ?? { ...unknownAnswer(), mockId: "unknown" };
 }
 
 export function sanitizeNarration(answer: NarrateResponse): NarrateResponse {
@@ -101,7 +101,11 @@ export function sanitizeNarration(answer: NarrateResponse): NarrateResponse {
       ...(cue.label ? { label: cue.label } : {}),
     });
   }
-  return { narration: answer.narration.trim(), cues };
+  return {
+    narration: answer.narration.trim(),
+    cues,
+    ...(answer.mockId ? { mockId: answer.mockId } : {}),
+  };
 }
 
 async function narrateWithElectron(

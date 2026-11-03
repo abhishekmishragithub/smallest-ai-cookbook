@@ -1,0 +1,432 @@
+{
+ "id": "lightning",
+ "question": "How do I stream TTS with Lightning?",
+ "voice": "meher",
+ "model": "lightning_v3.1_pro",
+ "sample_rate": 24000,
+ "durationSec": 40.47075,
+ "narration": "Stream Lightning on the WebSocket at wss://api.smallest.ai/waves/v1/tts/live. Send JSON with voice_id, text, and model lightning_v3.1_pro. Set word_timestamps to true for per word timing. Audio arrives in chunk frames. Each word_timestamp frame carries id, word, start, and end, in seconds. A complete frame ends the utterance. Sync REST and SSE ignore word_timestamps. Use this socket when a diagram must move with speech. Timestamps are available for the voice meher on lightning_v3.1_pro.",
+ "wordCount": 70,
+ "word_timestamps": [
+  {
+   "id": 0,
+   "word": "Stream",
+   "start": 0.08,
+   "end": 0.4
+  },
+  {
+   "id": 1,
+   "word": "Lightning",
+   "start": 0.44,
+   "end": 0.88
+  },
+  {
+   "id": 2,
+   "word": "on",
+   "start": 0.92,
+   "end": 1
+  },
+  {
+   "id": 3,
+   "word": "the",
+   "start": 1.04,
+   "end": 1.16
+  },
+  {
+   "id": 4,
+   "word": "WebSocket",
+   "start": 1.2,
+   "end": 1.72
+  },
+  {
+   "id": 5,
+   "word": "at",
+   "start": 1.84,
+   "end": 2.08
+  },
+  {
+   "id": 6,
+   "word": "wss://api.smallest.ai/waves/v1/tts/live.",
+   "start": 2.32,
+   "end": 9.64
+  },
+  {
+   "id": 7,
+   "word": "Send",
+   "start": 10.2,
+   "end": 10.52
+  },
+  {
+   "id": 8,
+   "word": "JSON",
+   "start": 10.56,
+   "end": 10.88
+  },
+  {
+   "id": 9,
+   "word": "with",
+   "start": 10.92,
+   "end": 11.08
+  },
+  {
+   "id": 10,
+   "word": "voice_id,",
+   "start": 11.12,
+   "end": 11.64
+  },
+  {
+   "id": 11,
+   "word": "text,",
+   "start": 12,
+   "end": 12.24
+  },
+  {
+   "id": 12,
+   "word": "and",
+   "start": 12.56,
+   "end": 12.68
+  },
+  {
+   "id": 13,
+   "word": "model",
+   "start": 12.76,
+   "end": 13
+  },
+  {
+   "id": 14,
+   "word": "lightning_v3.1_pro.",
+   "start": 13.04,
+   "end": 14.8
+  },
+  {
+   "id": 15,
+   "word": "Set",
+   "start": 15.67,
+   "end": 15.79
+  },
+  {
+   "id": 16,
+   "word": "word_timestamps",
+   "start": 15.91,
+   "end": 16.75
+  },
+  {
+   "id": 17,
+   "word": "to",
+   "start": 16.83,
+   "end": 16.91
+  },
+  {
+   "id": 18,
+   "word": "true",
+   "start": 17.03,
+   "end": 17.31
+  },
+  {
+   "id": 19,
+   "word": "for",
+   "start": 17.35,
+   "end": 17.47
+  },
+  {
+   "id": 20,
+   "word": "per",
+   "start": 17.51,
+   "end": 17.67
+  },
+  {
+   "id": 21,
+   "word": "word",
+   "start": 17.71,
+   "end": 17.87
+  },
+  {
+   "id": 22,
+   "word": "timing.",
+   "start": 17.91,
+   "end": 18.23
+  },
+  {
+   "id": 23,
+   "word": "Audio",
+   "start": 18.83,
+   "end": 19.07
+  },
+  {
+   "id": 24,
+   "word": "arrives",
+   "start": 19.11,
+   "end": 19.47
+  },
+  {
+   "id": 25,
+   "word": "in",
+   "start": 19.51,
+   "end": 19.59
+  },
+  {
+   "id": 26,
+   "word": "chunk",
+   "start": 19.63,
+   "end": 19.83
+  },
+  {
+   "id": 27,
+   "word": "frames.",
+   "start": 19.91,
+   "end": 20.19
+  },
+  {
+   "id": 28,
+   "word": "Each",
+   "start": 20.75,
+   "end": 20.99
+  },
+  {
+   "id": 29,
+   "word": "word_timestamp",
+   "start": 21.03,
+   "end": 21.99
+  },
+  {
+   "id": 30,
+   "word": "frame",
+   "start": 22.07,
+   "end": 22.35
+  },
+  {
+   "id": 31,
+   "word": "carries",
+   "start": 22.39,
+   "end": 22.67
+  },
+  {
+   "id": 32,
+   "word": "id,",
+   "start": 22.87,
+   "end": 23.15
+  },
+  {
+   "id": 33,
+   "word": "word,",
+   "start": 23.71,
+   "end": 24.03
+  },
+  {
+   "id": 34,
+   "word": "start,",
+   "start": 24.39,
+   "end": 24.63
+  },
+  {
+   "id": 35,
+   "word": "and",
+   "start": 24.83,
+   "end": 24.95
+  },
+  {
+   "id": 36,
+   "word": "end,",
+   "start": 25.11,
+   "end": 25.27
+  },
+  {
+   "id": 37,
+   "word": "in",
+   "start": 25.31,
+   "end": 25.39
+  },
+  {
+   "id": 38,
+   "word": "seconds.",
+   "start": 25.47,
+   "end": 25.83
+  },
+  {
+   "id": 39,
+   "word": "A",
+   "start": 26.31,
+   "end": 26.39
+  },
+  {
+   "id": 40,
+   "word": "complete",
+   "start": 26.43,
+   "end": 26.87
+  },
+  {
+   "id": 41,
+   "word": "frame",
+   "start": 26.91,
+   "end": 27.23
+  },
+  {
+   "id": 42,
+   "word": "ends",
+   "start": 27.39,
+   "end": 27.55
+  },
+  {
+   "id": 43,
+   "word": "the",
+   "start": 27.59,
+   "end": 27.71
+  },
+  {
+   "id": 44,
+   "word": "utterance.",
+   "start": 27.75,
+   "end": 28.19
+  },
+  {
+   "id": 45,
+   "word": "Sync",
+   "start": 28.55,
+   "end": 28.83
+  },
+  {
+   "id": 46,
+   "word": "REST",
+   "start": 29.07,
+   "end": 29.63
+  },
+  {
+   "id": 47,
+   "word": "and",
+   "start": 29.99,
+   "end": 30.15
+  },
+  {
+   "id": 48,
+   "word": "SSE",
+   "start": 30.23,
+   "end": 30.63
+  },
+  {
+   "id": 49,
+   "word": "ignore",
+   "start": 30.83,
+   "end": 31.19
+  },
+  {
+   "id": 50,
+   "word": "word_timestamps.",
+   "start": 31.23,
+   "end": 31.79
+  },
+  {
+   "id": 51,
+   "word": "Use",
+   "start": 32.63,
+   "end": 32.87
+  },
+  {
+   "id": 52,
+   "word": "this",
+   "start": 32.91,
+   "end": 33.07
+  },
+  {
+   "id": 53,
+   "word": "socket",
+   "start": 33.11,
+   "end": 33.39
+  },
+  {
+   "id": 54,
+   "word": "when",
+   "start": 33.43,
+   "end": 33.59
+  },
+  {
+   "id": 55,
+   "word": "a",
+   "start": 33.63,
+   "end": 33.71
+  },
+  {
+   "id": 56,
+   "word": "diagram",
+   "start": 33.71,
+   "end": 34.11
+  },
+  {
+   "id": 57,
+   "word": "must",
+   "start": 34.23,
+   "end": 34.47
+  },
+  {
+   "id": 58,
+   "word": "move",
+   "start": 34.55,
+   "end": 34.71
+  },
+  {
+   "id": 59,
+   "word": "with",
+   "start": 34.75,
+   "end": 34.91
+  },
+  {
+   "id": 60,
+   "word": "speech.",
+   "start": 34.95,
+   "end": 35.31
+  },
+  {
+   "id": 61,
+   "word": "Timestamps",
+   "start": 35.87,
+   "end": 36.39
+  },
+  {
+   "id": 62,
+   "word": "are",
+   "start": 36.43,
+   "end": 36.55
+  },
+  {
+   "id": 63,
+   "word": "available",
+   "start": 36.59,
+   "end": 36.99
+  },
+  {
+   "id": 64,
+   "word": "for",
+   "start": 37.03,
+   "end": 37.15
+  },
+  {
+   "id": 65,
+   "word": "the",
+   "start": 37.19,
+   "end": 37.31
+  },
+  {
+   "id": 66,
+   "word": "voice",
+   "start": 37.35,
+   "end": 37.59
+  },
+  {
+   "id": 67,
+   "word": "meher",
+   "start": 37.63,
+   "end": 37.87
+  },
+  {
+   "id": 68,
+   "word": "on",
+   "start": 37.95,
+   "end": 38.07
+  },
+  {
+   "id": 69,
+   "word": "lightning_v3.1_pro.",
+   "start": 38.11,
+   "end": 39.95
+  }
+ ]
+}

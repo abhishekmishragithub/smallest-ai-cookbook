@@ -1,4 +1,5 @@
 import { createCueScheduler } from "@/lib/cue-scheduler";
+import { audioClockElapsed, isPlaybackFinished, wallLimitSec } from "@/lib/playback-clock";
 import type { Cue } from "@/lib/schemas";
 import { HEY_SMALLEST_DEFAULTS } from "@/lib/schemas";
 import {
@@ -28,6 +29,7 @@ export async function fetchToken(endpoint: string, signal: AbortSignal): Promise
 export type NarrationPayload = {
   narration: string;
   cues: Cue[];
+  mockId?: string;
 };
 
 export async function fetchNarration(
@@ -46,7 +48,8 @@ export async function fetchNarration(
   if (!response.ok || typeof body.narration !== "string" || !Array.isArray(body.cues)) {
     throw new Error(body.error || "Narration failed.");
   }
-  return { narration: body.narration, cues: body.cues };
+  const mockId = typeof body.mockId === "string" && /^[a-z0-9-]+$/.test(body.mockId) ? body.mockId : undefined;
+  return { narration: body.narration, cues: body.cues, mockId };
 }
 
 export type PlaybackTick = {
@@ -65,20 +68,65 @@ export async function playNarration(options: {
   context: AudioContext;
   signal: AbortSignal;
   msPerChar: number;
+  mockId?: string;
   onTick: (tick: PlaybackTick) => void;
 }): Promise<"live" | "mock"> {
   const token = await fetchToken(options.endpoint, options.signal);
   if (options.signal.aborted) throw abortError();
   if (!token.token) {
-    await playWithTimestamps(
-      options,
-      syntheticTimestamps(options.narration, options.msPerChar),
-      silentDuration(options.narration, options.msPerChar),
-    );
+    const clip = options.mockId ? await loadMockClip(options.endpoint, options.mockId, options.context, options.signal) : null;
+    if (clip) {
+      await playWithTimestamps(options, clip.frames, clip.pcm, clip.sampleRate);
+    } else {
+      const frames = syntheticTimestamps(options.narration, options.msPerChar);
+      const duration = silentDuration(options.narration, options.msPerChar);
+      const rate = options.context.sampleRate || HEY_SMALLEST_DEFAULTS.sampleRate;
+      await playWithTimestamps(options, frames, silentPcm(duration, rate), rate);
+    }
     return "mock";
   }
   await playLive(options, token.token);
   return "live";
+}
+
+type MockClip = {
+  frames: WordTimestamp[];
+  pcm: Int16Array;
+  sampleRate: number;
+};
+
+async function loadMockClip(
+  endpoint: string,
+  mockId: string,
+  context: AudioContext,
+  signal: AbortSignal,
+): Promise<MockClip | null> {
+  try {
+    const [audioRes, timeRes] = await Promise.all([
+      fetch(join(endpoint, `/mock-audio/${mockId}.mp3`), { signal }),
+      fetch(join(endpoint, `/mock-audio/${mockId}.timestamps.json`), { signal }),
+    ]);
+    if (!audioRes.ok || !timeRes.ok) return null;
+    const payload = (await timeRes.json()) as { word_timestamps?: WordTimestamp[] };
+    const frames = Array.isArray(payload.word_timestamps) ? payload.word_timestamps : [];
+    if (frames.length === 0) return null;
+    const bytes = await audioRes.arrayBuffer();
+    const decoded = await context.decodeAudioData(bytes.slice(0));
+    const pcm = audioBufferToPcm16(decoded);
+    return { frames, pcm, sampleRate: decoded.sampleRate };
+  } catch {
+    return null;
+  }
+}
+
+function audioBufferToPcm16(buffer: AudioBuffer): Int16Array {
+  const channel = buffer.numberOfChannels > 0 ? buffer.getChannelData(0) : new Float32Array();
+  const pcm = new Int16Array(channel.length);
+  for (let index = 0; index < channel.length; index += 1) {
+    const sample = Math.max(-1, Math.min(1, channel[index]));
+    pcm[index] = sample < 0 ? Math.round(sample * 32768) : Math.round(sample * 32767);
+  }
+  return pcm;
 }
 
 async function playWithTimestamps(
@@ -91,7 +139,8 @@ async function playWithTimestamps(
     onTick: (tick: PlaybackTick) => void;
   },
   frames: WordTimestamp[],
-  durationSec: number,
+  pcm: Int16Array,
+  sampleRate: number,
 ): Promise<void> {
   const scheduler = createCueScheduler({
     narration: options.narration,
@@ -99,53 +148,10 @@ async function playWithTimestamps(
     msPerChar: options.msPerChar,
   });
   for (const frame of frames) scheduler.pushTimestamp(frame);
-  // Pace mock cues on the wall clock. A silent buffer keeps the audio
-  // graph warm, but some browsers collapse long silence and would skip cues.
   const player = new PcmPlayer(options.context);
-  const rate = options.context.sampleRate || HEY_SMALLEST_DEFAULTS.sampleRate;
-  try {
-    player.push(silentPcm(durationSec, rate), rate);
-  } catch {
-    // The diagram still advances if the buffer cannot be scheduled.
-  }
-  await followWall(options, scheduler, durationSec);
-}
-
-async function followWall(
-  options: {
-    narration: string;
-    signal: AbortSignal;
-    onTick: (tick: PlaybackTick) => void;
-  },
-  scheduler: ReturnType<typeof createCueScheduler>,
-  durationSec: number,
-): Promise<void> {
-  const words = splitWords(options.narration);
-  const started = performance.now();
-  let cueId: string | null = null;
-  await new Promise<void>((resolve, reject) => {
-    const step = () => {
-      if (options.signal.aborted) {
-        reject(abortError());
-        return;
-      }
-      const elapsed = (performance.now() - started) / 1000;
-      const finished = elapsed + 0.04 >= durationSec;
-      const tick = finished ? scheduler.complete(elapsed) : scheduler.advance(elapsed);
-      const cue = tick.cues.at(-1)?.cue ?? null;
-      if (cue) cueId = cue.id;
-      const wordIndex = tick.wordIndex;
-      const caption = wordIndex >= 0 ? words.slice(0, wordIndex + 1).join(" ") : "";
-      const latestWord = wordIndex >= 0 ? words[wordIndex] : "";
-      if (caption || cue) options.onTick({ caption, latestWord, cueId, cue });
-      if (finished) {
-        resolve();
-        return;
-      }
-      requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  });
+  player.push(pcm, sampleRate);
+  const duration = player.durationScheduled();
+  await follow(options, player, scheduler, (elapsed) => elapsed + 0.05 >= Math.max(duration, 0.2));
 }
 
 async function playLive(
@@ -263,9 +269,20 @@ async function follow(
       }
       const audioElapsed = player.elapsed();
       const wallElapsed = (performance.now() - wallStart) / 1000;
-      const elapsed = Math.max(elapsedSeen, audioElapsed > 0.02 ? audioElapsed : wallElapsed);
+      const started = player.durationScheduled() > 0;
+      const elapsed = audioClockElapsed({
+        durationScheduled: player.durationScheduled(),
+        audioElapsed,
+        elapsedSeen,
+      });
       elapsedSeen = elapsed;
-      const finished = wallElapsed > 45 || done(elapsed);
+      const finished = isPlaybackFinished({
+        wallElapsed,
+        wallLimitSec: wallLimitSec(options.narration),
+        started,
+        elapsed,
+        done,
+      });
       const tick = finished ? scheduler.complete(elapsed) : scheduler.advance(elapsed);
       const cue = tick.cues.at(-1)?.cue ?? null;
       if (cue) cueId = cue.id;

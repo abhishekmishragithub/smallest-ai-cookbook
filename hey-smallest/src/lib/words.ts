@@ -18,18 +18,36 @@ export function normalizeWord(word: string): string {
   return word.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
 }
 
+export type TimestampMatch = {
+  /** First narration word covered by this frame. */
+  index: number;
+  /** How many narration words this frame covers. A merged token can span two. */
+  span: number;
+};
+
 /**
- * Map a TTS word_timestamp onto an index of narration.split(/\s+/).
- * The frame id is the word index when the normalized words agree.
- * If the id is off but the same word exists nearby, use the closest unused index.
+ * Map a TTS word_timestamp onto narration words.
+ * Prefer the next unused words in order. A frame may cover several words when
+ * the server glues them together. Frame ids are only a hint: they restart on
+ * some chunk boundaries, so they are not the word index by themselves.
+ * Marks every covered index as used.
  */
-export function indexForTimestamp(
+export function matchTimestamp(
   words: string[],
   frame: WordTimestamp,
   used: Set<number>,
-): number | null {
+): TimestampMatch | null {
   const heard = normalizeWord(frame.word);
   if (!heard) return null;
+
+  const next = firstUnused(words.length, used);
+  if (next !== null) {
+    const span = spanFrom(words, next, heard, used);
+    if (span > 0) {
+      for (let offset = 0; offset < span; offset += 1) used.add(next + offset);
+      return { index: next, span };
+    }
+  }
 
   if (
     frame.id >= 0 &&
@@ -37,21 +55,44 @@ export function indexForTimestamp(
     !used.has(frame.id) &&
     normalizeWord(words[frame.id]) === heard
   ) {
-    return frame.id;
+    used.add(frame.id);
+    return { index: frame.id, span: 1 };
   }
 
-  let best: number | null = null;
-  let bestDist = Number.POSITIVE_INFINITY;
   for (let index = 0; index < words.length; index += 1) {
     if (used.has(index)) continue;
     if (normalizeWord(words[index]) !== heard) continue;
-    const dist = Math.abs(index - frame.id);
-    if (dist < bestDist) {
-      best = index;
-      bestDist = dist;
-    }
+    used.add(index);
+    return { index, span: 1 };
   }
-  return best;
+  return null;
+}
+
+export function indexForTimestamp(
+  words: string[],
+  frame: WordTimestamp,
+  used: Set<number>,
+): number | null {
+  return matchTimestamp(words, frame, used)?.index ?? null;
+}
+
+function firstUnused(length: number, used: Set<number>): number | null {
+  for (let index = 0; index < length; index += 1) {
+    if (!used.has(index)) return index;
+  }
+  return null;
+}
+
+function spanFrom(words: string[], start: number, heard: string, used: Set<number>): number {
+  let combined = "";
+  const limit = Math.min(words.length, start + 6);
+  for (let end = start; end < limit; end += 1) {
+    if (end !== start && used.has(end)) return 0;
+    combined += normalizeWord(words[end]);
+    if (combined === heard) return end - start + 1;
+    if (!heard.startsWith(combined)) return 0;
+  }
+  return 0;
 }
 
 /** Seconds from the start of speech until the word at `atWord` begins. */
