@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { corsHeaders, originAllowed, parseAllowlist } from "@/lib/cors";
+import { assetCorsHeaders, corsHeaders, originAllowed, parseAllowlist } from "@/lib/cors";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { handlePreflight } from "@/lib/token-handler";
 
@@ -37,6 +37,42 @@ describe("CORS", () => {
     );
     expect(blocked.status).toBe(403);
     expect(blocked.headers.get("access-control-allow-origin")).toBeNull();
+  });
+
+  it("allows mock-audio from the docs origin and Fern previews, never a star", () => {
+    const docs = assetCorsHeaders(
+      new Request("https://hey.example/mock-audio/call-flow.mp3", {
+        headers: { origin: "https://docs.smallest.ai" },
+      }),
+      {},
+    );
+    expect(docs.get("access-control-allow-origin")).toBe("https://docs.smallest.ai");
+    expect(docs.get("access-control-allow-methods")).toContain("GET");
+
+    const preview = assetCorsHeaders(
+      new Request("https://hey.example/mock-audio/call-flow.timestamps.json", {
+        headers: { origin: "https://preview-123.docs.buildwithfern.com" },
+      }),
+      {},
+    );
+    expect(preview.get("access-control-allow-origin")).toBe("https://preview-123.docs.buildwithfern.com");
+
+    const blocked = assetCorsHeaders(
+      new Request("https://hey.example/mock-audio/call-flow.mp3", {
+        headers: { origin: "https://evil.example" },
+      }),
+      {},
+    );
+    expect(blocked.get("access-control-allow-origin")).toBeNull();
+    expect([...docs.values(), ...preview.values(), ...blocked.values()]).not.toContain("*");
+
+    const custom = assetCorsHeaders(
+      new Request("https://hey.example/mock-audio/phone.mp3", {
+        headers: { origin: "https://branch.preview.example" },
+      }),
+      { ALLOWED_ORIGINS: "https://*.preview.example" },
+    );
+    expect(custom.get("access-control-allow-origin")).toBe("https://branch.preview.example");
   });
 
   it("reads ALLOWED_ORIGINS and ignores a bare star entry", () => {

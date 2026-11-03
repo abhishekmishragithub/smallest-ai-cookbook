@@ -78,6 +78,9 @@ export async function playNarration(options: {
     if (clip) {
       await playWithTimestamps(options, clip.frames, clip.pcm, clip.sampleRate);
     } else {
+      console.warn(
+        `Hey Smallest is using silent fallback audio${options.mockId ? ` for ${options.mockId}` : ""}. The mock recording did not load.`,
+      );
       const frames = syntheticTimestamps(options.narration, options.msPerChar);
       const duration = silentDuration(options.narration, options.msPerChar);
       const rate = options.context.sampleRate || HEY_SMALLEST_DEFAULTS.sampleRate;

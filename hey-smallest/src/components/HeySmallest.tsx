@@ -233,13 +233,14 @@ export function HeySmallest({
 
       <div className="hey-stage">
         {figureLabel ? <p className="hey-stage-label">{figureLabel}</p> : null}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="popLayout">
           <motion.div
+            className="hey-figure"
             key={activeId ?? "empty"}
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={reduce ? undefined : { opacity: 0 }}
-            transition={{ duration: reduce ? 0 : 0.22, ease: "easeOut" }}
+            exit={reduce ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: reduce ? 0 : 0.15, ease: "easeOut" }}
             dangerouslySetInnerHTML={{ __html: figure }}
           />
         </AnimatePresence>

@@ -48,6 +48,10 @@
   overflow: hidden;
 }
 
+.hey-figure {
+  width: 100%;
+}
+
 .hey-stage svg {
   display: block;
   width: 100%;

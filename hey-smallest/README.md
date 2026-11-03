@@ -71,7 +71,7 @@ The browser never holds `SMALLEST_API_KEY`.
 5. Speech to text in the browser uses `model=pulse` (not `pulse-pro`, which is pre-recorded). Audio is 16 kHz PCM sent from a script processor. A blob URL worklet is avoided because the docs CSP is strict.
 6. Text to speech sends `voice_id`, `text`, `model`, `sample_rate: 24000`, and `word_timestamps: true`. Word frames are `{ id, word, start, end }` in seconds. Cues stay at time 0 until the first audio buffer is scheduled, so the time to first byte does not run the character-count fallback. Frames are matched to narration words by normalized text in order, because some chunk boundaries restart `id` and some tokens are merged. A real word frame overrides the character estimate even if that estimate already started. The estimate itself uses 65 ms per character. The wall-clock give-up scales with the narration length.
 
-Mock recordings live in `public/mock-audio/<mockId>.mp3` and `<mockId>.timestamps.json`. See `public/mock-audio/MAPPING.md`.
+Mock recordings live in `public/mock-audio/<mockId>.mp3` and `<mockId>.timestamps.json`. See `public/mock-audio/MAPPING.md`. `GET /mock-audio/*` uses the same `ALLOWED_ORIGINS` list as the API routes, including `https://*.docs.buildwithfern.com`, and never `*`. If a recording fails to load, playback falls back to silence and logs a console warning.
 
 UI phases are `idle`, `listening`, `thinking`, `speaking`, `error`, and `interrupted`.
 

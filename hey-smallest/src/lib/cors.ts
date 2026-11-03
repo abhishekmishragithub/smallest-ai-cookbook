@@ -39,6 +39,23 @@ export function corsHeaders(req: Request, allowlist: string[]): Record<string, s
   return headers;
 }
 
+/**
+ * CORS for GET /mock-audio/*. Echoes an allowlisted origin. Never `*`.
+ * Same-host requests are allowed so the demo page can load its own files.
+ */
+export function assetCorsHeaders(req: Request, env: Record<string, string | undefined>): Headers {
+  const headers = new Headers();
+  headers.set("Vary", "Origin");
+  const origin = req.headers.get("origin");
+  if (!origin) return headers;
+  const allowed = isSameOrigin(req, origin) || originAllowed(origin, parseAllowlist(env.ALLOWED_ORIGINS));
+  if (!allowed) return headers;
+  headers.set("Access-Control-Allow-Origin", origin);
+  headers.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
+  headers.set("Access-Control-Max-Age", "600");
+  return headers;
+}
+
 export function isPreflightRejected(req: Request, allowlist: string[]): boolean {
   const origin = req.headers.get("origin");
   if (!origin || isSameOrigin(req, origin)) return false;
