@@ -1,0 +1,420 @@
+{
+ "id": "pulse",
+ "question": "Pulse streaming vs batch STT?",
+ "voice": "meher",
+ "model": "lightning_v3.1_pro",
+ "sample_rate": 24000,
+ "durationSec": 37.9,
+ "narration": "Pulse offers streaming and batch. Streaming opens a WebSocket at wss://api.smallest.ai/waves/v1/stt/live?model=pulse and sends PCM audio. You get partial transcripts, then a final. Batch POSTs the whole file to /waves/v1/stt/?model=pulse and returns one transcript. Streaming time to first token is about 150 milliseconds at one concurrency. Pulse Pro is pre recorded English only, and it is not a streaming model. For English end of turn detection, use model pulse-2.",
+ "wordCount": 68,
+ "word_timestamps": [
+  {
+   "id": 0,
+   "word": "Pulse",
+   "start": 0.06,
+   "end": 0.34
+  },
+  {
+   "id": 1,
+   "word": "offers",
+   "start": 0.38,
+   "end": 0.74
+  },
+  {
+   "id": 2,
+   "word": "streaming",
+   "start": 0.78,
+   "end": 1.18
+  },
+  {
+   "id": 3,
+   "word": "and",
+   "start": 1.3,
+   "end": 1.46
+  },
+  {
+   "id": 4,
+   "word": "batch.",
+   "start": 1.5,
+   "end": 1.7
+  },
+  {
+   "id": 5,
+   "word": "Streaming",
+   "start": 2.34,
+   "end": 2.74
+  },
+  {
+   "id": 6,
+   "word": "opens",
+   "start": 2.78,
+   "end": 3.06
+  },
+  {
+   "id": 7,
+   "word": "a",
+   "start": 3.1,
+   "end": 3.18
+  },
+  {
+   "id": 8,
+   "word": "WebSocket",
+   "start": 3.18,
+   "end": 3.7
+  },
+  {
+   "id": 9,
+   "word": "at",
+   "start": 4.06,
+   "end": 4.14
+  },
+  {
+   "id": 10,
+   "word": "wss://api.smallest.ai/waves/v1/stt/live?model=pulse",
+   "start": 4.34,
+   "end": 12.06
+  },
+  {
+   "id": 11,
+   "word": "and",
+   "start": 12.54,
+   "end": 12.66
+  },
+  {
+   "id": 12,
+   "word": "sends",
+   "start": 12.7,
+   "end": 12.94
+  },
+  {
+   "id": 13,
+   "word": "PCM",
+   "start": 13.02,
+   "end": 13.42
+  },
+  {
+   "id": 14,
+   "word": "audio.",
+   "start": 13.46,
+   "end": 13.86
+  },
+  {
+   "id": 15,
+   "word": "You",
+   "start": 14.42,
+   "end": 14.54
+  },
+  {
+   "id": 16,
+   "word": "get",
+   "start": 14.58,
+   "end": 14.7
+  },
+  {
+   "id": 17,
+   "word": "partial",
+   "start": 14.74,
+   "end": 15.06
+  },
+  {
+   "id": 18,
+   "word": "transcripts,",
+   "start": 15.1,
+   "end": 15.62
+  },
+  {
+   "id": 19,
+   "word": "then",
+   "start": 15.7,
+   "end": 16.02
+  },
+  {
+   "id": 20,
+   "word": "a",
+   "start": 16.06,
+   "end": 16.14
+  },
+  {
+   "id": 21,
+   "word": "final.",
+   "start": 16.14,
+   "end": 16.42
+  },
+  {
+   "id": 22,
+   "word": "Batch",
+   "start": 16.82,
+   "end": 17.1
+  },
+  {
+   "id": 23,
+   "word": "POSTs",
+   "start": 17.14,
+   "end": 17.42
+  },
+  {
+   "id": 24,
+   "word": "the",
+   "start": 17.46,
+   "end": 17.58
+  },
+  {
+   "id": 25,
+   "word": "whole",
+   "start": 17.62,
+   "end": 17.82
+  },
+  {
+   "id": 26,
+   "word": "file",
+   "start": 17.86,
+   "end": 18.18
+  },
+  {
+   "id": 27,
+   "word": "to",
+   "start": 18.22,
+   "end": 18.3
+  },
+  {
+   "id": 28,
+   "word": "/waves/v1/stt/?model=pulse",
+   "start": 18.94,
+   "end": 22.54
+  },
+  {
+   "id": 29,
+   "word": "and",
+   "start": 22.98,
+   "end": 23.1
+  },
+  {
+   "id": 30,
+   "word": "returns",
+   "start": 23.1,
+   "end": 23.42
+  },
+  {
+   "id": 31,
+   "word": "one",
+   "start": 23.5,
+   "end": 23.66
+  },
+  {
+   "id": 32,
+   "word": "transcript.",
+   "start": 23.7,
+   "end": 24.18
+  },
+  {
+   "id": 33,
+   "word": "Streaming",
+   "start": 24.7,
+   "end": 25.18
+  },
+  {
+   "id": 34,
+   "word": "time",
+   "start": 25.26,
+   "end": 25.5
+  },
+  {
+   "id": 35,
+   "word": "to",
+   "start": 25.54,
+   "end": 25.62
+  },
+  {
+   "id": 36,
+   "word": "first",
+   "start": 25.66,
+   "end": 25.94
+  },
+  {
+   "id": 37,
+   "word": "token",
+   "start": 26.02,
+   "end": 26.3
+  },
+  {
+   "id": 38,
+   "word": "is",
+   "start": 26.38,
+   "end": 26.46
+  },
+  {
+   "id": 39,
+   "word": "about",
+   "start": 26.5,
+   "end": 26.7
+  },
+  {
+   "id": 40,
+   "word": "150",
+   "start": 26.86,
+   "end": 27.58
+  },
+  {
+   "id": 41,
+   "word": "milliseconds",
+   "start": 27.62,
+   "end": 28.22
+  },
+  {
+   "id": 42,
+   "word": "at",
+   "start": 28.26,
+   "end": 28.34
+  },
+  {
+   "id": 43,
+   "word": "one",
+   "start": 28.38,
+   "end": 28.58
+  },
+  {
+   "id": 44,
+   "word": "concurrency.",
+   "start": 28.62,
+   "end": 29.14
+  },
+  {
+   "id": 45,
+   "word": "Pulse",
+   "start": 29.78,
+   "end": 30.06
+  },
+  {
+   "id": 46,
+   "word": "Pro",
+   "start": 30.1,
+   "end": 30.26
+  },
+  {
+   "id": 47,
+   "word": "is",
+   "start": 30.38,
+   "end": 30.5
+  },
+  {
+   "id": 48,
+   "word": "pre",
+   "start": 30.58,
+   "end": 30.78
+  },
+  {
+   "id": 49,
+   "word": "recorded",
+   "start": 30.82,
+   "end": 31.22
+  },
+  {
+   "id": 50,
+   "word": "English",
+   "start": 31.3,
+   "end": 31.58
+  },
+  {
+   "id": 51,
+   "word": "only,",
+   "start": 31.66,
+   "end": 31.94
+  },
+  {
+   "id": 52,
+   "word": "and",
+   "start": 32.3,
+   "end": 32.42
+  },
+  {
+   "id": 53,
+   "word": "it",
+   "start": 32.46,
+   "end": 32.54
+  },
+  {
+   "id": 54,
+   "word": "is",
+   "start": 32.58,
+   "end": 32.7
+  },
+  {
+   "id": 55,
+   "word": "not",
+   "start": 32.74,
+   "end": 32.94
+  },
+  {
+   "id": 56,
+   "word": "a",
+   "start": 32.98,
+   "end": 33.06
+  },
+  {
+   "id": 57,
+   "word": "streaming",
+   "start": 33.1,
+   "end": 33.46
+  },
+  {
+   "id": 58,
+   "word": "model.",
+   "start": 33.5,
+   "end": 33.74
+  },
+  {
+   "id": 59,
+   "word": "For",
+   "start": 34.22,
+   "end": 34.34
+  },
+  {
+   "id": 60,
+   "word": "English",
+   "start": 34.38,
+   "end": 34.7
+  },
+  {
+   "id": 61,
+   "word": "end",
+   "start": 34.82,
+   "end": 34.94
+  },
+  {
+   "id": 62,
+   "word": "of",
+   "start": 34.98,
+   "end": 35.06
+  },
+  {
+   "id": 63,
+   "word": "turn",
+   "start": 35.14,
+   "end": 35.3
+  },
+  {
+   "id": 64,
+   "word": "detection,",
+   "start": 35.34,
+   "end": 35.9
+  },
+  {
+   "id": 65,
+   "word": "use",
+   "start": 36.22,
+   "end": 36.46
+  },
+  {
+   "id": 66,
+   "word": "model",
+   "start": 36.54,
+   "end": 36.82
+  },
+  {
+   "id": 67,
+   "word": "pulse-2.",
+   "start": 36.94,
+   "end": 37.38
+  }
+ ]
+}

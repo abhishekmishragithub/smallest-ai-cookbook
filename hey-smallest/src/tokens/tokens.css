@@ -1,0 +1,58 @@
+/*
+  Hey Smallest tokens.
+  Fern docs set --accent and --grayscale on the page. Those win when present.
+  Standalone, the fallbacks match the Smallest design system: warm paper,
+  near-black ink, a single teal accent, Aeonik Pro with Geist behind it.
+*/
+
+.hey-smallest {
+  --hey-accent: var(--accent, #0e6b5c);
+  --hey-ink: var(--grayscale, #1a1916);
+  --hey-on-accent: #f7f6f3;
+  --hey-canvas: transparent;
+  --hey-muted: color-mix(in srgb, var(--hey-ink) 62%, transparent);
+  --hey-faint: color-mix(in srgb, var(--hey-ink) 45%, transparent);
+  --hey-line: color-mix(in srgb, var(--hey-ink) 16%, transparent);
+  --hey-line-strong: color-mix(in srgb, var(--hey-ink) 32%, transparent);
+  --hey-fill: color-mix(in srgb, var(--hey-ink) 4%, transparent);
+  --hey-accent-soft: color-mix(in srgb, var(--hey-accent) 14%, transparent);
+  --hey-accent-line: color-mix(in srgb, var(--hey-accent) 55%, transparent);
+  --hey-font-sans: "Aeonik Pro", var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
+  --hey-font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --hey-space-1: 4px;
+  --hey-space-2: 8px;
+  --hey-space-3: 12px;
+  --hey-space-4: 16px;
+  --hey-space-5: 24px;
+  --hey-space-6: 32px;
+  --hey-space-7: 48px;
+  --hey-radius: 14px;
+  --hey-radius-pill: 999px;
+  --hey-text-xs: 0.75rem;
+  --hey-text-sm: 0.875rem;
+  --hey-text-md: 1rem;
+  --hey-text-lg: 1.125rem;
+  --hey-text-xl: 2.25rem;
+  --hey-leading: 1.5;
+  --hey-duration: 180ms;
+  --hey-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  color: var(--hey-ink);
+  background: var(--hey-canvas);
+  font-family: var(--hey-font-sans);
+  font-size: var(--hey-text-md);
+  line-height: var(--hey-leading);
+  letter-spacing: -0.011em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hey-smallest,
+  .hey-smallest *,
+  .hey-smallest *::before,
+  .hey-smallest *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

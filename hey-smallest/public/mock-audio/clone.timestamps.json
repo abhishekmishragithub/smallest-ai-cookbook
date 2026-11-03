@@ -1,0 +1,402 @@
+{
+ "id": "clone",
+ "question": "How do I add a custom voice or voice clone?",
+ "voice": "meher",
+ "model": "lightning_v3.1_pro",
+ "sample_rate": 24000,
+ "durationSec": 25.49,
+ "narration": "Create a clone with one POST to /waves/v1/voice-cloning as multipart form data. The required parts are displayName and file. Use 5 to 15 seconds of clean audio, under 5 MB. Set language to the language of that sample. The model defaults to lightning-v3.1. Call it with an API key. A wat token receives 403 on this route. Pass the returned voice_id to Lightning as voice_id.",
+ "wordCount": 65,
+ "word_timestamps": [
+  {
+   "id": 0,
+   "word": "Create",
+   "start": 0.05,
+   "end": 0.29
+  },
+  {
+   "id": 1,
+   "word": "a",
+   "start": 0.33,
+   "end": 0.41
+  },
+  {
+   "id": 2,
+   "word": "clone",
+   "start": 0.41,
+   "end": 0.65
+  },
+  {
+   "id": 3,
+   "word": "with",
+   "start": 0.69,
+   "end": 0.85
+  },
+  {
+   "id": 4,
+   "word": "one",
+   "start": 0.89,
+   "end": 1.05
+  },
+  {
+   "id": 5,
+   "word": "POST",
+   "start": 1.09,
+   "end": 1.57
+  },
+  {
+   "id": 6,
+   "word": "to",
+   "start": 1.85,
+   "end": 1.93
+  },
+  {
+   "id": 7,
+   "word": "/waves/v1/voice-cloning",
+   "start": 2.01,
+   "end": 3.93
+  },
+  {
+   "id": 8,
+   "word": "as",
+   "start": 4.29,
+   "end": 4.41
+  },
+  {
+   "id": 9,
+   "word": "multipart",
+   "start": 4.45,
+   "end": 4.85
+  },
+  {
+   "id": 10,
+   "word": "form",
+   "start": 4.89,
+   "end": 5.13
+  },
+  {
+   "id": 11,
+   "word": "data.",
+   "start": 5.21,
+   "end": 5.41
+  },
+  {
+   "id": 12,
+   "word": "The",
+   "start": 5.89,
+   "end": 6.01
+  },
+  {
+   "id": 13,
+   "word": "required",
+   "start": 6.05,
+   "end": 6.41
+  },
+  {
+   "id": 14,
+   "word": "parts",
+   "start": 6.45,
+   "end": 6.65
+  },
+  {
+   "id": 15,
+   "word": "are",
+   "start": 6.69,
+   "end": 6.81
+  },
+  {
+   "id": 16,
+   "word": "displayName",
+   "start": 6.85,
+   "end": 7.37
+  },
+  {
+   "id": 17,
+   "word": "and",
+   "start": 7.41,
+   "end": 7.53
+  },
+  {
+   "id": 18,
+   "word": "file.",
+   "start": 7.57,
+   "end": 7.81
+  },
+  {
+   "id": 19,
+   "word": "Use",
+   "start": 8.21,
+   "end": 8.37
+  },
+  {
+   "id": 20,
+   "word": "5",
+   "start": 8.45,
+   "end": 8.65
+  },
+  {
+   "id": 21,
+   "word": "to",
+   "start": 8.69,
+   "end": 8.77
+  },
+  {
+   "id": 22,
+   "word": "15",
+   "start": 8.81,
+   "end": 9.09
+  },
+  {
+   "id": 23,
+   "word": "seconds",
+   "start": 9.13,
+   "end": 9.45
+  },
+  {
+   "id": 24,
+   "word": "of",
+   "start": 9.45,
+   "end": 9.53
+  },
+  {
+   "id": 25,
+   "word": "clean",
+   "start": 9.57,
+   "end": 9.77
+  },
+  {
+   "id": 26,
+   "word": "audio,",
+   "start": 9.81,
+   "end": 10.01
+  },
+  {
+   "id": 27,
+   "word": "under",
+   "start": 10.29,
+   "end": 10.49
+  },
+  {
+   "id": 28,
+   "word": "5",
+   "start": 10.53,
+   "end": 10.77
+  },
+  {
+   "id": 29,
+   "word": "MB.",
+   "start": 10.81,
+   "end": 11.01
+  },
+  {
+   "id": 30,
+   "word": "Set",
+   "start": 11.65,
+   "end": 11.81
+  },
+  {
+   "id": 31,
+   "word": "language",
+   "start": 11.89,
+   "end": 12.37
+  },
+  {
+   "id": 32,
+   "word": "to",
+   "start": 12.49,
+   "end": 12.57
+  },
+  {
+   "id": 33,
+   "word": "the",
+   "start": 12.61,
+   "end": 12.73
+  },
+  {
+   "id": 34,
+   "word": "language",
+   "start": 12.77,
+   "end": 13.09
+  },
+  {
+   "id": 35,
+   "word": "of",
+   "start": 13.13,
+   "end": 13.21
+  },
+  {
+   "id": 36,
+   "word": "that",
+   "start": 13.25,
+   "end": 13.41
+  },
+  {
+   "id": 37,
+   "word": "sample.",
+   "start": 13.45,
+   "end": 13.73
+  },
+  {
+   "id": 38,
+   "word": "The",
+   "start": 14.17,
+   "end": 14.29
+  },
+  {
+   "id": 39,
+   "word": "model",
+   "start": 14.33,
+   "end": 14.57
+  },
+  {
+   "id": 40,
+   "word": "defaults",
+   "start": 14.65,
+   "end": 15.09
+  },
+  {
+   "id": 41,
+   "word": "to",
+   "start": 15.17,
+   "end": 15.25
+  },
+  {
+   "id": 42,
+   "word": "lightning-v3.1.",
+   "start": 15.33,
+   "end": 16.85
+  },
+  {
+   "id": 43,
+   "word": "Call",
+   "start": 17.37,
+   "end": 17.53
+  },
+  {
+   "id": 44,
+   "word": "it",
+   "start": 17.57,
+   "end": 17.65
+  },
+  {
+   "id": 45,
+   "word": "with",
+   "start": 17.69,
+   "end": 17.85
+  },
+  {
+   "id": 46,
+   "word": "an",
+   "start": 17.89,
+   "end": 17.97
+  },
+  {
+   "id": 47,
+   "word": "API",
+   "start": 18.13,
+   "end": 18.41
+  },
+  {
+   "id": 48,
+   "word": "key.",
+   "start": 18.53,
+   "end": 18.65
+  },
+  {
+   "id": 49,
+   "word": "A",
+   "start": 19.33,
+   "end": 19.41
+  },
+  {
+   "id": 50,
+   "word": "wat",
+   "start": 19.45,
+   "end": 19.61
+  },
+  {
+   "id": 51,
+   "word": "token",
+   "start": 19.73,
+   "end": 20.05
+  },
+  {
+   "id": 52,
+   "word": "receives",
+   "start": 20.09,
+   "end": 20.45
+  },
+  {
+   "id": 53,
+   "word": "403",
+   "start": 20.53,
+   "end": 21.25
+  },
+  {
+   "id": 54,
+   "word": "on",
+   "start": 21.29,
+   "end": 21.37
+  },
+  {
+   "id": 55,
+   "word": "this",
+   "start": 21.41,
+   "end": 21.57
+  },
+  {
+   "id": 56,
+   "word": "route.",
+   "start": 21.61,
+   "end": 21.89
+  },
+  {
+   "id": 57,
+   "word": "Pass",
+   "start": 22.25,
+   "end": 22.41
+  },
+  {
+   "id": 58,
+   "word": "the",
+   "start": 22.49,
+   "end": 22.61
+  },
+  {
+   "id": 59,
+   "word": "returned",
+   "start": 22.65,
+   "end": 23.01
+  },
+  {
+   "id": 60,
+   "word": "voice_id",
+   "start": 23.05,
+   "end": 23.65
+  },
+  {
+   "id": 61,
+   "word": "to",
+   "start": 23.65,
+   "end": 23.73
+  },
+  {
+   "id": 62,
+   "word": "Lightning",
+   "start": 23.77,
+   "end": 24.25
+  },
+  {
+   "id": 63,
+   "word": "as",
+   "start": 24.33,
+   "end": 24.45
+  },
+  {
+   "id": 64,
+   "word": "voice_id.",
+   "start": 24.49,
+   "end": 25.13
+  }
+ ]
+}

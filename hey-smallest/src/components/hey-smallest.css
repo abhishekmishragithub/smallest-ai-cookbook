@@ -1,0 +1,297 @@
+@import "../tokens/tokens.css";
+
+.hey-smallest {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hey-space-5);
+}
+
+.hey-smallest * {
+  box-sizing: border-box;
+}
+
+.hey-mark {
+  margin: 0;
+  font-family: var(--hey-font-mono);
+  font-size: var(--hey-text-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hey-faint);
+}
+
+.hey-mark strong {
+  color: var(--hey-ink);
+  font-weight: 560;
+}
+
+.hey-title {
+  margin: var(--hey-space-3) 0 0;
+  font-size: var(--hey-text-xl);
+  font-weight: 520;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.hey-lede {
+  margin: var(--hey-space-3) 0 0;
+  max-width: 38rem;
+  color: var(--hey-muted);
+  font-size: var(--hey-text-md);
+}
+
+.hey-stage {
+  position: relative;
+  min-height: 360px;
+  border: 1px solid var(--hey-line);
+  border-radius: var(--hey-radius);
+  background: var(--hey-fill);
+  overflow: hidden;
+}
+
+.hey-figure {
+  width: 100%;
+}
+
+.hey-stage svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hey-stage-label {
+  position: absolute;
+  top: var(--hey-space-4);
+  left: var(--hey-space-4);
+  margin: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--hey-line);
+  border-radius: var(--hey-radius-pill);
+  background: color-mix(in srgb, var(--hey-canvas, #f3f1ec) 88%, transparent);
+  color: var(--hey-ink);
+  font-family: var(--hey-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hey-caption {
+  min-height: 3.4rem;
+  margin: 0;
+  font-size: var(--hey-text-lg);
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+}
+
+.hey-caption:empty::before {
+  content: "Captions follow the spoken words.";
+  color: var(--hey-faint);
+  font-size: var(--hey-text-sm);
+}
+
+.hey-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hey-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hey-steps li {
+  padding: 4px 10px;
+  border: 1px solid var(--hey-line);
+  border-radius: var(--hey-radius-pill);
+  color: var(--hey-faint);
+  font-family: var(--hey-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.hey-steps li[data-step="done"] {
+  color: var(--hey-ink);
+  border-color: var(--hey-line-strong);
+}
+
+.hey-steps li[data-step="active"] {
+  color: var(--hey-accent);
+  border-color: var(--hey-accent-line);
+  background: var(--hey-accent-soft);
+}
+
+.hey-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hey-space-3);
+}
+
+.hey-ask,
+.hey-stop,
+.hey-send {
+  appearance: none;
+  border: 0;
+  border-radius: var(--hey-radius-pill);
+  font: inherit;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+}
+
+.hey-ask,
+.hey-send {
+  min-height: 48px;
+  padding: 0 18px 0 14px;
+  background: var(--hey-accent);
+  color: var(--hey-on-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hey-ask[data-listening="true"] {
+  box-shadow: 0 0 0 6px var(--hey-accent-soft);
+}
+
+.hey-ask kbd,
+.hey-hint kbd {
+  font-family: var(--hey-font-mono);
+  font-size: 11px;
+  border: 1px solid color-mix(in srgb, var(--hey-on-accent) 35%, transparent);
+  border-radius: 6px;
+  padding: 1px 5px;
+}
+
+.hey-stop {
+  min-height: 48px;
+  padding: 0 16px;
+  background: transparent;
+  color: var(--hey-ink);
+  border: 1px solid var(--hey-line-strong);
+}
+
+.hey-ask:disabled,
+.hey-stop:disabled,
+.hey-send:disabled,
+.hey-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.hey-ask:focus-visible,
+.hey-stop:focus-visible,
+.hey-send:focus-visible,
+.hey-chip:focus-visible,
+.hey-type input:focus-visible {
+  outline: 2px solid var(--hey-accent);
+  outline-offset: 3px;
+}
+
+.hey-mic {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.hey-type {
+  display: flex;
+  flex: 1 1 220px;
+  gap: var(--hey-space-2);
+  min-width: 0;
+}
+
+.hey-type label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.hey-type input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--hey-line-strong);
+  border-radius: var(--hey-radius-pill);
+  background: transparent;
+  color: var(--hey-ink);
+  font: inherit;
+}
+
+.hey-type input::placeholder {
+  color: var(--hey-faint);
+}
+
+.hey-alert {
+  margin: 0;
+  color: var(--hey-ink);
+  font-size: var(--hey-text-sm);
+}
+
+.hey-status {
+  margin: 0;
+  color: var(--hey-muted);
+  font-family: var(--hey-font-mono);
+  font-size: var(--hey-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hey-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hey-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hey-chip {
+  appearance: none;
+  text-align: left;
+  max-width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--hey-radius-pill);
+  border: 1px solid var(--hey-line);
+  background: transparent;
+  color: var(--hey-ink);
+  font: inherit;
+  font-size: var(--hey-text-sm);
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.hey-chip:hover {
+  border-color: var(--hey-accent-line);
+}
+
+.hey-hint {
+  margin: 0;
+  color: var(--hey-faint);
+  font-size: var(--hey-text-xs);
+}
+
+.hey-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .hey-title {
+    font-size: 1.85rem;
+  }
+
+  .hey-stage {
+    min-height: 240px;
+  }
+}
